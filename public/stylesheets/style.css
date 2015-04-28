@@ -7,17 +7,28 @@ a {
   color: #00B7FF;
 }
 
-.post {
+.post,
+.comment {
 	margin-top: 20px;
 }
-.post--rating-container {
+.post--rating-container,
+.comment--rating-container {
 	float: left;
 	margin-right: 1em;
 }
-.post--rating {
+
+.post--rating,
+.comment--rating {
 	margin: 0.33em auto;
 }
 .post--title {
     margin-top: 0;
 }
 .post--meta {}
+
+.comment--meta {}
+
+.glyphicon-thumbs-up,
+.glyphicon-thumbs-down {
+	cursor: pointer
+}
