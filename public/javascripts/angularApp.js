@@ -71,9 +71,15 @@ app.factory('auth', ['$http', '$window', function($http, $window) {
 
 	factory.currentUser = function() {
 		var token = factory.getToken(),
-			payload = JSON.parse($window.atob(token.split('.')[1]));
+			payload;
 
-	    return payload.username;
+		if (token) {
+			payload = JSON.parse($window.atob(token.split('.')[1]));
+			return payload.username;
+		} else {
+			return false;
+		}
+
 	};
 
 	factory.register = function(user) {
@@ -144,7 +150,7 @@ app.factory('posts', ['$http', 'auth', function($http, auth) {
 		return $http.post('/posts', post, {
 			headers: {Authorization: 'Bearer '+ auth.getToken()}
 		}).success(function(data){
-			o.posts.push(data);
+			factory.posts.push(data);
 		});
 	};
 
