@@ -29,7 +29,7 @@ router.get('/posts', function(req, res, next) {
 router.post('/posts', auth, function(req, res, next) {
 	var post = new Post(req.body);
 
-	post.author = auth.payload.username;
+	post.author = req.payload.username;
 
 	post.save(function(err, post) {
 		if (err) {
@@ -156,7 +156,7 @@ router.post('/register', function(req, res, next){
 	});
 });
 
-router.get('/login', function(req, res, next) {
+router.post('/login', function(req, res, next) {
 	if (!req.body.username || !req.body.password) {
 		return res.status(400).json({
 			message: 'please fill out all fields'
