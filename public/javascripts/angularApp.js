@@ -61,7 +61,7 @@ app.factory('auth', ['$http', '$window', function($http, $window) {
 	factory.isLoggedIn = function() {
 		var token = factory.getToken();
 
-		if (token) {
+		if(token){
 			var payload = JSON.parse($window.atob(token.split('.')[1]));
 			return payload.exp > Date.now() / 1000;
 		} else {
@@ -70,12 +70,10 @@ app.factory('auth', ['$http', '$window', function($http, $window) {
 	};
 
 	factory.currentUser = function() {
-		if (factory.isLoggedIn()) {
-			var token = factory.getToken();
-			var payload = JSON.parse('"' + $window.localStorage['flapper-news-token'] + '"');
+		var token = factory.getToken(),
+			payload = JSON.parse($window.atob(token.split('.')[1]));
 
-			return payload.username;
-		}
+	    return payload.username;
 	};
 
 	factory.register = function(user) {
@@ -144,16 +142,15 @@ app.factory('posts', ['$http', 'auth', function($http, auth) {
 
 	factory.create = function(post) {
 		return $http.post('/posts', post, {
-			headers: {authorization: 'Bearer ' + auth.getToken()}
+			headers: {Authorization: 'Bearer ' + auth.getToken()}
 		}).success(function(data) {
 			factory.posts.push(data);
 		});
 	};
 
 	factory.upvote = function(post) {
-
 		return $http.put('/posts/' + post._id + '/upvote', {
-			headers: {authorization: 'Bearer ' + auth.getToken()}
+			headers: {Authorization: 'Bearer ' + auth.getToken()}
 		}).success(function(data) {
 			post.upvotes += 1;
 		});
@@ -161,13 +158,13 @@ app.factory('posts', ['$http', 'auth', function($http, auth) {
 
 	factory.addComment = function(id, comment) {
 		return $http.post('/posts/' + id + '/comments', comment, {
-			headers: {authorization: 'Bearer ' + auth.getToken()}
+			headers: {Authorization: 'Bearer ' + auth.getToken()}
 		});
 	};
 
 	factory.upvoteComment = function(post, comment) {
 		return $http.put('/posts/' + post._id + '/comments/' + comment._id + '/upvote', {
-			headers: {authorization: 'Bearer ' + auth.getToken()}
+			headers: {Authorization: 'Bearer ' + auth.getToken()}
 		}).success(function(data) {
 			comment.upvotes += 1;
 		});
