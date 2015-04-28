@@ -10,17 +10,15 @@
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.js"></script>
 	<script src="/javascripts/angularApp.js"></script>
 
-	<style>
-		.glyphicon-thumbs-up {
-			cursor: pointer
-		}
-	</style>
 </head>
 
 <body ng-app="flapperNews">
 	<div class="container">
 		<nav class="navbar navbar-default pull-right" ng-controller="NavCtrl">
 			<ul class="nav navbar-nav">
+				<li>
+					<a href="#/">News</a>
+				</li>
 				<li ng-show="isLoggedIn()">
 					<a>{{ currentUser() }}</a>
 				</li>
@@ -79,22 +77,38 @@
 
 <script type="text/ng-template" id="/posts.html">
 	<div class="page-header">
-		<h3><a ng-show="post.link" href="{{post.link}}">{{post.title}}</a><span ng-hide="post.link">{{post.title}}</span></h3>
+		<a ng-show="post.link" href="{{post.link}}" target="_blank"><h1 class="post--title">{{post.title}}</h1></a>
+		<h1 ng-hide="post.link" class="post--title">{{post.title}}</h1>
 	</div>
 
-	<div ng-repeat="comment in post.comments | orderBy:'-upvotes'">
-		<span class="glyphicon glyphicon-thumbs-up" ng-click="incrementUpvotes(comment)"></span>{{comment.upvotes}} - by {{comment.author}}<span style="font-size:20px; margin-left:10px;">{{comment.body}}</span>
+	<div ng-repeat="comment in post.comments | orderBy:'-(upvotes-downvotes)'">
+
+		<div class="comment clearfix">
+			<div class="comment--rating-container text-center">
+				<div>
+					<span class="glyphicon glyphicon-thumbs-up" ng-click="incrementUpvotes(comment)"></span>
+				</div>
+				<p class="comment--rating">{{(comment.upvotes - comment.downvotes)}}</p>
+				<div>
+					<span class="glyphicon glyphicon-thumbs-down" ng-click="incrementDownvotes(comment)"></span>
+				</div>
+			</div>
+			<p>{{comment.body}}</p>
+		</div>
+		<div class="comment--meta text-right">
+			<p>by {{comment.author}}</p>
+		</div>
+
 	</div>
 
 	<form ng-submit="addComment()" style="margin-top:30px;">
-    	<h3>Add a new comment</h3>
+		<h3>Add a new comment</h3>
 
 		<div class="form-group">
 			<input type="text" class="form-control" placeholder="Comment" ng-model="body"></input>
 		</div>
 		<button type="submit" class="btn btn-primary">Post</button>
-  </form>
-
+	</form>
 </script>
 
 <script type="text/ng-template" id="/register.html">
