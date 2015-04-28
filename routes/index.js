@@ -92,6 +92,17 @@ router.put('/posts/:post/upvote', auth, function(req, res) {
 	});
 });
 
+router.put('/posts/:post/downvote', auth, function(req, res) {
+	req.post.downvote(function(err, post) {
+		if (err) {
+			return next(err);
+		}
+
+		res.json(post);
+
+	});
+});
+
 router.post('/posts/:post/comments', auth, function(req, res, next) {
 	var comment = new Comment(req.body);
 
@@ -124,6 +135,17 @@ router.get('/comments/:comment', function(req, res) {
 
 router.put('/posts/:posts/comments/:comment/upvote', auth, function(req, res) {
 	req.comment.upvote(function(err, comment) {
+		if (err) {
+			return next(err);
+		}
+
+		res.json(comment);
+
+	});
+});
+
+router.put('/posts/:posts/comments/:comment/downvote', auth, function(req, res) {
+	req.comment.downvote(function(err, comment) {
 		if (err) {
 			return next(err);
 		}
